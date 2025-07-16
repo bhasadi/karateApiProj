@@ -1,0 +1,110 @@
+mvn test "-Dkarate.env=trn"
+mvn test "-Dtest=runners.SysOneRunner" "-Dsystem=sysOne"
+
+
+
+// ==================================================
+// Sample karate-config
+// ==================================================
+function fn() {
+  var env = karate.env || 'qa';
+  var system = karate.properties['system'] || 'sysOne';  // ← you control this via -Dsystem=...
+
+  // Read the system-specific config JSON file
+  var config = read('classpath:config/' + system + '.json');
+
+  // Optional: Add env label and auth token
+  config.env = env;
+
+  // Get the token (optional if needed)
+  var authResponse = karate.callSingle('classpath:common/getToken.feature', config);
+  config.token = authResponse.token;
+
+  return config;
+}
+
+
+// ==================================================
+// Sample karate-config using vault 
+// ==================================================
+function fn() {
+  var env = karate.env || 'qa';
+  var system = karate.properties['system'] || 'sysOne';
+
+  // Load base config
+  var config = read('classpath:config/' + system + '.json');
+  config.env = env;
+
+  // Call Vault to get live secrets (e.g. client_secret, etc.)
+  var vaultSecrets = karate.callSingle('classpath:common/get-vault-secrets.feature', config);
+
+  // Merge Vault secrets into config
+  Object.assign(config, vaultSecrets.secrets);
+
+  // Now config.client_id and config.client_secret are available
+  var authResponse = karate.callSingle('classpath:common/get-token-clientid.feature', config);
+  config.token = authResponse.token;
+
+  return config;
+}
+
+
+// ==================================================
+// Sample karate-config using vault 
+// ==================================================
+function fn() {
+  var config = {};
+
+  // Read lines from .credentials file
+  var credsText = karate.readAsString('classpath:secrets/.credentials');
+  var lines = credsText.split('\n');
+
+  // Simple parser: populate config with keys
+  lines.forEach(function(line) {
+    line = line.trim();
+    if (line && !line.startsWith('#')) {
+      var pair = line.split('=');
+      var key = pair[0].trim();
+      var value = pair[1].trim();
+      config[key] = value;
+    }
+  });
+
+  return config;
+}
+
+// ==================================================
+// Sample karate-config 
+// ==================================================
+function fn() {
+  var system = karate.properties['system'] || 'sysOne';
+
+  // 👇 Load credentials from Java class
+  var credentials = Java.type('utls.utlsGeneric')
+                        .loadCredentials('secrets/.credentials');
+
+  // 👇 Access shared keys
+  var config = {
+    client_id: credentials.client_id,
+    client_secret: credentials.client_secret,
+    username: credentials[system].username,
+    password: credentials[system].password
+  };
+
+  return config;
+}
+
+// ==================================================
+// Sample karate-config 
+// ==================================================
+function fn() {
+  var config = {};
+
+  var CredentialLoader = Java.type('utls.utlsGeneric');
+  var secrets = CredentialLoader.loadCredentials('secrets/.credentials');
+
+  // Use the secrets as needed
+  config.clientToken = secrets['app-clientmgmt'];
+
+  return config;
+}

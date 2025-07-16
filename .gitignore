@@ -22,6 +22,7 @@ Thumbs.db
 .env
 *.local
 *.secret
+*.credentials
 
 # === Optional ===
 karate-summary.html

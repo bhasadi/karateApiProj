@@ -1,0 +1,5 @@
+{
+  "baseUrl": "https://api.sysone.test",
+  "username": "sysone_user",
+  "password": "secret1"
+}
