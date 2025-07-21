@@ -108,3 +108,30 @@ function fn() {
 
   return config;
 }
+
+
+✅ Why Option 1 Works Better
+Each API is self-contained: you can zip, clone, deploy, or isolate easily.
+
+Easier to map to separate teams or repositories.
+
+Ideal for modular test execution, e.g., Runner.path("sysOne/experience/apiOne/features")
+
+Environment-based config and credentials can be isolated per API (e.g., loadCredentials.feature in each API folder)
+
+# Run all tests under apiOne
+Runner.path("classpath:sysOne/experience/apiOne/features")
+
+# Run all experience tests
+Runner.path("classpath:sysOne/experience")
+
+# Run all system tests
+Runner.path("classpath:sysOne/system")
+
+# Set env and system in pom or npm
+-Dkarate.env=qa -Dsystem=sysOne -Dapi=apiOne
+
+🔹 You want modular, API-isolated structure
+🔹 Each API may grow independently
+🔹 You plan to run APIs separately in CI/CD
+🔹 You want clean config/auth separation per API

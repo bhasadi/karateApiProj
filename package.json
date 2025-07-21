@@ -1,0 +1,27 @@
+{
+  "name": "karateapiproj",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+   
+    "test:karate:vault": "set VAULT_TOKEN=your-vault-token-here && mvn test -Dtest=runners.MyRunner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhasadi/karateApiProj.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bhasadi/karateApiProj/issues"
+  },
+  "homepage": "https://github.com/bhasadi/karateApiProj#readme"
+}
+
+
+//  npm run test:karate:vault

@@ -1,0 +1,94 @@
+✅ 1. PowerShell (Recommended for Windows / VSCode Terminal)
+powershell
+Copy
+$env:VAULT_TOKEN = "your-vault-token-here"
+mvn test -Dtest=runners.MyRunner
+This sets the env variable only for the current terminal session.
+
+✅ 2. CMD (Windows Command Prompt)
+cmd
+Copy
+set VAULT_TOKEN=your-vault-token-here
+mvn test -Dtest=runners.MyRunner
+✅ 3. Linux/macOS Bash or Git Bash
+bash
+Copy
+export VAULT_TOKEN=your-vault-token-here
+mvn test -Dtest=runners.MyRunner
+✅ 4. As part of the Maven command (inline)
+Only works in Linux/macOS or Git Bash:
+
+bash
+Copy
+VAULT_TOKEN=your-vault-token-here mvn test -Dtest=runners.MyRunner
+For Windows CMD, this does not work. Use set or $env: as shown above.
+
+✅ 5. CI/CD Systems (e.g., GitHub Actions, Azure DevOps, Jenkins)
+In CI tools, define VAULT_TOKEN as a secured environment variable in the pipeline configuration or project secrets.
+
+Let me know if you want a package.json NPM script version of this too.
+
+
+
+
+
+
+
+
+Ask ChatGPT
+You said:
+pls write me this for usage in package.json
+
+
+ChatGPT said:
+Certainly! Here's how you can structure your package.json to run Karate tests with a VAULT_TOKEN passed as an environment variable.
+
+✅ 1. Add a script in package.json
+Update your package.json like this:
+
+json
+Copy
+{
+  "name": "karate-project",
+  "version": "1.0.0",
+  "scripts": {
+    "test:karate:vault": "set VAULT_TOKEN=your-vault-token-here && mvn test -Dtest=runners.MyRunner"
+  }
+}
+✅ Usage (in PowerShell or CMD on Windows):
+bash
+Copy
+npm run test:karate:vault
+🧪 Optional: Pass Vault Token dynamically from CLI
+To avoid hardcoding VAULT_TOKEN, use an npm package like cross-env:
+
+1. Install cross-env (if not already):
+bash
+Copy
+npm install --save-dev cross-env
+2. Update script to be cross-platform:
+json
+Copy
+"scripts": {
+  "test:karate:vault": "cross-env VAULT_TOKEN=your-vault-token-here mvn test -Dtest=runners.MyRunner"
+}
+This works on Windows, macOS, and Linux.
+
+3. Usage:
+bash
+Copy
+npm run test:karate:vault
+Or pass token dynamically:
+
+bash
+Copy
+cross-env VAULT_TOKEN=my-token npm run test:karate:vault
+Would you like to parameterize the environment (dev, sit, etc.) from package.json too?
+
+
+
+
+
+
+
+

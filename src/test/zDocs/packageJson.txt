@@ -1,0 +1,33 @@
+{
+  "name": "karate-api-tests",
+  "version": "1.0.0",
+  "description": "Modular Karate API test framework with Maven integration",
+  "scripts": {
+    // === Basic test run (JUnit runner) ===
+    "test": "mvn test -Dtest=runners.MyRunner",
+
+    // === Run with Vault token + environment ===
+    "test:env": "cross-env VAULT_TOKEN=your-vault-token karate.env=qa mvn test -Dtest=runners.MyRunner",
+
+    // === Run with tags ===
+    "test:tags": "cross-env VAULT_TOKEN=your-vault-token karate.env=qa mvn test -Dtest=runners.MyRunner -Dkarate.options=\"--tags @smoke\"",
+
+    // === Run using exec:java (optional) ===
+    "test:exec": "cross-env VAULT_TOKEN=your-vault-token karate.env=qa mvn exec:java -Dexec.mainClass=runners.MyRunner"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
+
+
+
+# Install cross-env once
+npm install --save-dev cross-env
+
+
+For Windows PowerShell:
+cross-env VAULT_TOKEN="your-token-here" npm run test:env
+
+For Linux / macOS / Git Bash:
+VAULT_TOKEN="your-token-here" npm run test:env

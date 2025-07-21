@@ -1,34 +1,35 @@
 package runners;
 
-import com.intuit.karate.junit5.Karate;
+import utls.utlsReporting;
+import utls.utlsKarateExecutor;
 import com.intuit.karate.Results;
-import static org.junit.jupiter.api.Assertions.*;
-import net.masterthought.cucumber.Configuration;
-import net.masterthought.cucumber.ReportBuilder;
-
-import java.io.File;
-import java.util.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyRunner {
 
+    // ✅ JUnit 5 execution
     @org.junit.jupiter.api.Test
-    void testParallel() {
-        Results results = com.intuit.karate.Runner.path("classpath:sysOne")
-                .outputCucumberJson(true)
-                .parallel(5);
-
-        generateReport(results.getReportDir());
-
+    void runJUnitTest() {
+        System.out.println("[JUnit] Starting Karate run...");
+        Results results = utlsKarateExecutor.runKarate();
+        utlsReporting.generateCucumberReport(results.getReportDir());
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
     }
 
-    public static void generateReport(String karateOutputPath) {
-        File reportOutputDirectory = new File("target/cucumber-html-reports");
-        List<String> jsonFiles = new ArrayList<>();
-        jsonFiles.add(karateOutputPath + "/cucumber-report.json");
+    // ✅ CLI/main() execution
+    public static void main(String[] args) {
+        System.out.println("[Main] Starting Karate run...");
+        Results results = utlsKarateExecutor.runKarate();
+        utlsReporting.generateCucumberReport(results.getReportDir());
 
-        Configuration config = new Configuration(reportOutputDirectory, "Karate Test Report");
-        ReportBuilder reportBuilder = new ReportBuilder(jsonFiles, config);
-        reportBuilder.generateReports();
+        if (results.getFailCount() > 0) {
+            System.err.println("Some scenarios failed:");
+            System.err.println(results.getErrorMessages());
+            System.exit(1);
+        } else {
+            System.out.println("All scenarios passed!");
+            System.exit(0);
+        }
     }
-}
+
+}// class
